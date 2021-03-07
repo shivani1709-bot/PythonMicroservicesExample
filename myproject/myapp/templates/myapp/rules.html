@@ -1,0 +1,257 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        * {box-sizing: border-box;}
+
+        input[type=text], select, textarea {
+          width: 25%;
+          padding: 12px;
+          border: 2px solid black;
+          border-radius: 4px;
+          box-sizing: border-box;
+          margin-top: 6px;
+          margin-bottom: 16px;
+          resize: vertical;
+        }
+
+        label {
+            display: inline-block;
+            width:100px;
+            text-align: right;
+        }
+        input[type=submit] {
+          background-color: gray;
+          color: white;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+          background-color: #45a049;
+        }
+        .mydiv {
+          border: none;
+          background-color: white;
+          text-align: center;
+          font-family: Arial, Helvetica, sans-serif
+        }
+
+        .container {
+          border-radius: 5px;
+          background-color: #f2f2f2;
+          padding: 20px;
+        }
+        h2 {
+          text-align: center;
+          background-color: gray;
+        }
+        </style>
+        </head>
+        <body>
+
+        <h2>Create a new rule</h2>
+        <hr/>
+        <form action="Parameters" align="center" method = "POST">
+         {% csrf_token %}
+          <label for="rule_name">Rule name </label>
+          <input type="text" id="rule_name" name="rule_name"><br><br>
+
+
+          <label for="country">Country</label>
+          <select name="country" id="country">
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="Africa">Africa</option>
+            <option value="Japan">Japan</option>
+          </select>
+          <br><br>
+
+
+          <label for="state">State</label>
+          <select name="state" id="state">
+            <option value="Gujarat">Gujarat</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="kerala">Kerala</option>
+            <option value="Goa">Goa</option>
+          </select><br><br>
+
+
+          <label for="region">Region</label>
+          <select name="region" id="region">
+            <option value="North">North</option>
+            <option value="East">East</option>
+            <option value="South">South</option>
+            <option value="West">West</option>
+          </select><br><br>
+
+
+          <label for="group_id">Group ID</label>
+          <select name="group_id" id="group_id">
+            <option value="123">123</option>
+            <option value="345">345</option>
+            <option value="234">234</option>
+            <option value="126">126</option>
+          </select><br><br>
+
+
+          <label for="device_id">DeviceId List</label>
+          <input type="text" id="device_id" name="device_id"><br><br>
+
+
+          <label for="status">Status</label>
+          <select name="status" id="status">
+            <option value="active">Active</option>
+            <option value="non active">Non Active</option>
+          </select><br><br>
+            <hr/>
+          <p> <span style="margin-right: 3em">Select Event</span>
+              <span style="margin-right: 2em">
+                  <input type="radio" id="resource" onclick="radioSelect(this.id)" name="event_name" value="resource">
+                  <label for="resource">Resource</label>
+              </span>
+              <span style="margin-right: 2em">
+                  <input type="radio" id="fault" onclick="radioSelect(this.id)" name="event_name" value="fault">
+                  <label for="fault">Fault</label>
+              </span><br><br></p>
+
+        <div id="event_type">
+            <div id="fault_div">
+                <label for="fault_type" id="label_fault">Fault Type </label>
+                <select name="fault_type" id="fault_type">
+                    <option value="active">Active</option>
+                    <option value="non active">Non Active</option>
+                </select><br><br>
+
+            </div>
+            <div id="resource_div">
+            <label for="res_name" id="label_resname">Resource Name </label>
+          <select name="res_name" id="res_name">
+              <option value="resource1">resource1</option>
+              <option value="resource2">resource1</option>
+              <option value="resource3">resource3</option>
+              <option value="resource4">resource4</option>
+          </select><br><br>
+
+
+            <label for="operator" id="label_op">Operator </label>
+          <select name="operator" id="operator">
+            <option value="Operator1">Operator1</option>
+            <option value="Operator2">Operator2</option>
+          </select><br><br>
+
+            <label for="resource_value" id="label_resvalue">Resource Value </label>
+          <select name="resource_value" id="resource_value">
+            <option value="rvalue1">value1</option>
+            <option value="rvalue2">value2</option>
+          </select><br><br>
+                </div>
+        </div>
+            <hr/>
+          <p><span style="margin-right: 3em">Select Action Type</span>
+              <span style="margin-right: 2em">
+              <input type="radio" id="SMS" name="action_type" value="sms">
+              <label for="sms">SMS</label>
+              </span>
+              <span style="margin-right: 2em"> <input type="radio" id="Email" name="action_type" value="email">
+              <label for="email">Email</label></span><br><br></p>
+
+          <label for="emails">Email Addresses</label>
+          <input type="text" id="emails" name="emails"><br><br>
+
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject"><br><br>
+
+          <label for="email_content">Email Content</label>
+          <input type="text" id="email_content" name="email_content"><br><br>
+
+          <input type="submit"  value="Save">
+
+        </form>
+        <hr/>
+        <div class="mydiv">
+            <div id="displayContent">
+                <p> Below are the parameters selected: </p>
+            </div>
+        </div>
+        </body>
+        </html>
+
+        <script>
+              var count = 0;
+
+              function generateElements(id){
+                const div = document.createElement('div');
+
+                if(id === "fault" && count > 0){
+                    div.innerHTML = `
+                      <div id="fault_div">
+                        <label for="fault_type" id="label_fault">Fault Type </label>
+                        <select name="fault_type" id="fault_type">
+                        <option value="active">Active</option>
+                        <option value="non active">Non Active</option>
+                        </select><br><br>
+                      </div>`;
+                }
+                else if(id === "resource" && count > 0){
+                      div.innerHTML = `
+                      <div id="resource_div">
+                          <label for="res_name" id="label_resname">Resource Name </label>
+                          <select name="res_name" id="res_name">
+                          <option value="resource1">resource1</option>
+                          <option value="resource2">resource1</option>
+                          <option value="resource3">resource3</option>
+                          <option value="resource4">resource4</option>
+                          </select><br><br>
+
+
+                          <label for="operator" id="label_op">Operator </label>
+                          <select name="operator" id="operator">
+                          <option value="Operator1">Operator1</option>
+                          <option value="Operator2">Operator2</option>
+                          </select><br><br>
+
+
+                          <label for="resource_value" id="label_resvalue">Resource Value </label>
+                          <select name="resource_value" id="resource_value">
+                          <option value="rvalue1">value1</option>
+                          <option value="rvalue2">value2</option>
+                          </select><br><br>
+                    </div>
+                      `;
+                }
+                document.getElementById('event_type').appendChild(div);
+                count++
+              }
+
+              function radioSelect(id){
+              console.log("Inside radioselect:  ", id);
+                if(id === "fault"){
+                    console.log("Inside if fault")
+                    var resource_div = document.getElementById("resource_div");
+                    resource_div.parentNode.removeChild(resource_div);
+                    generateElements("fault")
+
+                }
+                else if(id === "resource"){
+                    console.log("Inside else resource")
+                    var fault_div = document.getElementById("fault_div");
+                    fault_div.parentNode.removeChild(fault_div);
+                    generateElements("resource")
+                }
+              }
+            console.log("{{data|escapejs}}".length)
+            if("{{data|escapejs}}".length > 0)
+            {
+            var data = JSON.parse("{{data|escapejs}}");
+            console.log(data)
+
+            for (let x in data) {
+            document.getElementById("displayContent").innerHTML += x  + "   :   " + data[x] + "<br>";
+            console.log(x)
+            }
+            }
+        </script>
